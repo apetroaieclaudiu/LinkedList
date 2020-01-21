@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "LinkedList.h"
 
 void print_node(void *data) {
@@ -8,7 +9,7 @@ void print_node(void *data) {
 
 void add_node(Node **head, int value) {
     Node* new_node  = (Node*) malloc(sizeof(Node));
-    Node* last      = *head;
+    Node* last;
 
     new_node->value = value;
     new_node->callback = &print_node;
@@ -16,9 +17,9 @@ void add_node(Node **head, int value) {
         *head = new_node;
         return ;
     }
-
+    last = *head;
     while (last->next != NULL) {
-        last - last->next;
+        last = last->next;
     }
 
     last->next = new_node;
@@ -45,7 +46,7 @@ void print_list(Node **head) {
   Node* temp = *head;
 
   while (temp != NULL) {
-    temp->callback(temp->value);
+    temp->callback(&temp->value);
     temp = temp->next;
   }
 }
@@ -62,4 +63,43 @@ void flush_list(Node **head) {
   }
 
   *head = NULL;
+}
+
+void sort_list(Node **head) {
+  Node *sorted = NULL;
+
+  Node *current = *head;
+  while (current != NULL)
+  {
+      Node *next = current->next;
+
+      sortedInsert(&sorted, current);
+
+      current = next;
+  }
+
+  *head = sorted;
+}
+
+
+void sortedInsert(Node** head, Node* new_node)
+{
+    struct Node* current;
+
+    if (*head == NULL || (*head)->value >= new_node->value)
+    {
+        new_node->next = *head;
+        *head = new_node;
+    }
+    else
+    {
+        current = *head;
+        while (current->next!=NULL &&
+               current->next->value < new_node->value)
+        {
+            current = current->next;
+        }
+        new_node->next = current->next;
+        current->next = new_node;
+    }
 }
