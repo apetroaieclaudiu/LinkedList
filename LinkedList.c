@@ -13,6 +13,7 @@ void add_node(Node **head, int value) {
 
     new_node->value = value;
     new_node->callback = &print_node;
+    new_node->next = NULL;
     if (*head == NULL) {
         *head = new_node;
         return ;
