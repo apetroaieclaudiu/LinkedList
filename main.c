@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>
 
 #define ADD         1
 #define DELETE      2
@@ -62,7 +63,7 @@ void execute_instruction(struct my_argumemts_t *argument) {
                 print_list(&head);
                 break;
             default:
-                printf("Thread with id: %d dont know what he is doing\n", argument->thd_id, argument->values[j]);
+                printf("Thread with id: %d dont know what he is doing\n", argument->thd_id);
                 break;
         }
         pthread_mutex_unlock(&lockList);
@@ -71,7 +72,6 @@ void execute_instruction(struct my_argumemts_t *argument) {
 
 void *thread_routine(void *arg) {
     struct my_argumemts_t *argument = (struct my_argumemts_t*) arg;
-    unsigned int i;
     pthread_mutex_lock(&bar.lock);
 
     int is_last_to_arrive = (bar.nr_still_to_come == 1);
