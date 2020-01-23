@@ -23,13 +23,10 @@ struct my_argumemts_t {
 };
  
 struct my_barrier_t bar;
-Node *head = NULL;
-pthread_mutex_t lockList;
-
+ 
 void my_barrier_init(struct my_barrier_t *bar, int nr_still_to_come) {
     pthread_mutex_init(&bar->lock, NULL);
     pthread_cond_init(&bar->cond, NULL);
-    pthread_mutex_init(&lockList, NULL);
     bar->nr_still_to_come = nr_still_to_come;
 }
  
@@ -42,31 +39,29 @@ void execute_instruction(struct my_argumemts_t *argument) {
     int i,j;
     j = 0;
     for (i = 0; (argument->instructions[i]) != 0; i++) {
-        pthread_mutex_lock(&lockList);
         switch (argument->instructions[i]) {
             case ADD:
                 printf("Thread with id: %d is adding the value: %d\n", argument->thd_id, argument->values[j]);
-                add_node(&head, argument->values[j]);
+                add_node(argument->values[j]);
                 j++;
                 break;
             case DELETE:
                 printf("Thread with id: %d is deleting the node with value: %d\n", argument->thd_id, argument->values[j]);
-                delete_node(&head, argument->values[j]);
+                delete_node(argument->values[j]);
                 j++;
                 break;
             case SORT:
                 printf("Thread with id: %d is sorting the list\n", argument->thd_id);
-                sort_list(&head);
+                sort_list();
                 break;
             case PRINT:
                 printf("Thread with id: %d is printing the list\n", argument->thd_id);
-                print_list(&head);
+                print_list();
                 break;
             default:
                 printf("Thread with id: %d dont know what he is doing\n", argument->thd_id);
                 break;
         }
-        pthread_mutex_unlock(&lockList);
     }
 }
 
@@ -127,8 +122,8 @@ int main() {
     free(arguments[0].values);
     free(arguments[1].values);
     free(arguments[2].values);
-    print_list(&head);
-    flush_list(&head);
+    print_list();
+    flush_list();
 
     return 0;
 }
